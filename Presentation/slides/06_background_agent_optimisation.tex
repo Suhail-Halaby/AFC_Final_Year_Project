@@ -1,0 +1,42 @@
+% Slide: background -- agent optimisation
+
+\begin{frame}
+	\frametitle{Background}
+	\framesubtitle{Agent Optimisation}
+
+	\textbf{Agent loss:} match the meta-network's targets~[1]
+	\[
+		L(\theta) = \mathbb{E}_{s,a\sim\boldsymbol{\pi}_\theta}\Big[
+			D\big(\hat{\boldsymbol{\pi}}, \boldsymbol{\pi}_\theta(s)\big)
+			+ D\big(\hat{\mathbf{y}}, \mathbf{y}_\theta(s)\big)
+			+ D\big(\hat{\mathbf{z}}, \mathbf{z}_\theta(s,a)\big)
+			+ L_{\text{aux}}
+		\Big]
+	\]
+
+	\begin{columns}[T]
+		\begin{column}{0.48\linewidth}
+			\textbf{Distance: KL divergence}
+			\[
+				D(\mathbf{p},\mathbf{q}) = D_{\text{KL}}(\mathbf{p}\,\|\,\mathbf{q})
+				= \sum_i p_i \log \frac{p_i}{q_i}
+			\]
+		\end{column}
+		\begin{column}{0.48\linewidth}
+			\textbf{Auxiliary loss}
+			\[
+				L_{\text{aux}} = D\big(\hat{\mathbf{q}}, \mathbf{q}_\theta(s,a)\big)
+				+ D\big(\hat{\mathbf{p}}, \mathbf{p}_\theta(s,a)\big)
+			\]
+		\end{column}
+	\end{columns}
+
+	\vfill
+	\footnotesize
+	\begin{tabular}{@{}l@{\quad}l@{}}
+		$\boldsymbol{\pi}_\theta, \mathbf{y}_\theta, \mathbf{z}_\theta$ & agent outputs \\
+		$\hat{\boldsymbol{\pi}}, \hat{\mathbf{y}}, \hat{\mathbf{z}}$ & meta-network targets (all softmax-normalised) \\
+		$\hat{\mathbf{q}}$ & Retrace action-value target, two-hot encoded \\
+		$\hat{\mathbf{p}} = \boldsymbol{\pi}_\theta(s')$ & policy at the next state \\
+	\end{tabular}
+\end{frame}
