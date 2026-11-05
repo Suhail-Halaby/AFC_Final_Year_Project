@@ -1,0 +1,41 @@
+% Slide: background -- meta-optimisation
+% (needs \usepackage{mathtools} in main.tex for \mathclap)
+
+\begin{frame}
+	\frametitle{Background}
+	\framesubtitle{Meta-Optimisation}
+
+	\textbf{Discovery objective:} meta-parameters $\eta$ that maximise agent reward across environments~[1]
+	\[
+		J(\eta) = \mathbb{E}_{\mathcal{E}}\,\mathbb{E}_{\theta}\big[J(\theta)\big],
+		\qquad
+		J(\theta) = \mathbb{E}\Big[\textstyle\sum_t \gamma^t r_t\Big]
+	\]
+
+	\textbf{Meta-gradient} (chain rule): $\eta$ updated by gradient ascent
+	\[
+		\nabla_\eta J(\eta) \approx \mathbb{E}_{\mathcal{E}}\,\mathbb{E}_{\theta}\big[
+			\underbrace{\nabla_\eta \theta}_{\mathclap{\substack{\text{backprop through}\\\text{20 agent updates}}}}
+			\qquad\qquad
+			\underbrace{\nabla_\theta J(\theta)}_{\mathclap{\substack{\text{advantage actor-critic}\\\text{(meta-value function)}}}}
+		\big]
+	\]
+
+	\vfill
+	\footnotesize
+	\begin{columns}[T]
+		\begin{column}{0.48\linewidth}
+			\begin{itemize}
+				\item Population of agents, many complex environments
+				\item Agents periodically reset $\Rightarrow$ rule must learn fast
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.48\linewidth}
+			\begin{tabular}{@{}l@{\quad}l@{}}
+				$\mathcal{E}$ & sampled environment \\
+				$\theta$ & agent parameters learnt with the rule \\
+				$\eta$ & meta-network parameters \\
+			\end{tabular}
+		\end{column}
+	\end{columns}
+\end{frame}
