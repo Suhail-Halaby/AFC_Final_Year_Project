@@ -1,0 +1,351 @@
+%!TEX program = xelatex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AFC Final Year Project -- Presentation
+% Built on the official Imperial College London Beamer theme
+% https://github.com/ImperialCollegeLondon/imperial_latex_templates
+%
+% OVERLEAF: Menu -> Settings -> Compiler -> XeLaTeX  (PDFLaTeX will NOT work)
+%
+% Put your own figures in the figures/ folder and include them with
+%   \includegraphics[width=\linewidth]{my_figure.png}
+% Search this file for "TODO" to find every placeholder.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[
+	aspectratio=169, % 16:9
+	t,               % Top-align slide content
+	onlytextwidth,   % Columns span the text width
+	10pt,
+]{beamer}
+
+\usetheme{Imperial}
+\graphicspath{{Images/}{figures/}{./}} % Theme images + your own figures
+
+% Helper: a light-grey placeholder box to stand in for a figure until you add one
+\newcommand{\figplaceholder}[3]{% {width}{height}{label}
+	\fcolorbox{ICLBlue}{ICLLightGrey}{\parbox[c][#2][c]{\dimexpr#1-2\fboxsep-2\fboxrule\relax}{\centering\small\textcolor{ICLBlue}{#3}}}%
+}
+
+%-------------------------------------------------------------------------------
+%	PRESENTATION INFORMATION
+%-------------------------------------------------------------------------------
+
+\title{AFC Final Year Project}                   % TODO: full project title
+\subtitle{Final Year Project Presentation}       % TODO: e.g. "Interim Review" / "Final Presentation"
+\author{Suhail Halaby}
+\institute{Supervisor: TODO \\ Department of TODO, Imperial College London}
+\date{\today}                                     % or e.g. 05/11/2026
+
+%-------------------------------------------------------------------------------
+
+\begin{document}
+
+%===============================================================================
+%	TITLE SLIDE (blue)
+%===============================================================================
+
+\begingroup
+	\setbeamercolor{background canvas}{bg=ICLBlue}
+	\setbeamercolor{title page title}{fg=white}
+	\setbeamercolor{title page subtitle}{fg=white}
+	\setbeamercolor{author}{fg=white}
+	\setbeamercolor{inst}{fg=white}
+	\setbeamercolor{date}{fg=white}
+	\setbeamertemplate{title page}[logo]{ICL_Logo_White.pdf}
+	\frame[plain, s]{\titlepage}
+\endgroup
+
+%===============================================================================
+%	AGENDA
+%===============================================================================
+
+\begingroup
+	\setbeamercolor{normal text}{fg=ICLBlue}\usebeamercolor[fg]{normal text}
+	\begin{frame}
+		\begin{columns}[T]
+			\begin{column}{0.48\linewidth}
+				\HUGE\textbf{Agenda}
+			\end{column}
+			\begin{column}{0.48\linewidth}
+				\textbf{01}\tabto{0.125\linewidth} Motivation \& problem\\
+				\textbf{02}\tabto{0.125\linewidth} Aims \& objectives\\
+				\textbf{03}\tabto{0.125\linewidth} Background\\
+				\textbf{04}\tabto{0.125\linewidth} Methodology\\
+				\textbf{05}\tabto{0.125\linewidth} Design \& implementation\\
+				\textbf{06}\tabto{0.125\linewidth} Results\\
+				\textbf{07}\tabto{0.125\linewidth} Discussion\\
+				\textbf{08}\tabto{0.125\linewidth} Conclusions \& next steps
+			\end{column}
+		\end{columns}
+	\end{frame}
+\endgroup
+
+%===============================================================================
+%	01 MOTIVATION
+%===============================================================================
+
+\begin{frame}
+	\frametitle{Motivation}
+	\framesubtitle{Why this problem matters}
+
+	\begin{columns}[T]
+		\begin{column}{0.48\linewidth}
+			\textbf{The problem}\\
+			TODO: one or two sentences stating the problem in plain terms.
+
+			\textbf{Why it matters}
+			\begin{itemize}
+				\item TODO: impact / application
+				\item TODO: who benefits
+				\item TODO: what current approaches miss
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.48\linewidth}
+			\figplaceholder{\linewidth}{4.2cm}{TODO: motivating image or diagram}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%------------------------------------------------
+% Big-statement slide: the one-line research question
+%------------------------------------------------
+
+\begingroup
+	\setbeamercolor{background canvas}{bg=ICLBlue}
+	\setbeamercolor{normal text}{fg=white}\usebeamercolor[fg]{normal text}
+	\setbeamercolor{page number in head/foot}{fg=white}
+	\begin{frame}
+		\begin{adjustwidth}{0cm}{0.15\textwidth}
+			{\Huge{\ImperialSansSemiBold TODO: State your core research question in a single sentence?}}
+		\end{adjustwidth}
+	\end{frame}
+\endgroup
+
+%===============================================================================
+%	02 AIMS & OBJECTIVES
+%===============================================================================
+
+\begin{frame}
+	\frametitle{Aims \& Objectives}
+
+	\begin{columns}[T]
+		\begin{column}{0.48\linewidth}
+			\textbf{Aim}\\
+			TODO: the overall goal of the project.
+
+			\textbf{Deliverables}
+			\begin{itemize}
+				\item TODO
+				\item TODO
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.48\linewidth}
+			\textbf{Objectives}
+			\begin{enumerate}
+				\item TODO: objective 1
+				\item TODO: objective 2
+				\item TODO: objective 3
+				\item TODO: objective 4
+			\end{enumerate}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%===============================================================================
+%	03 BACKGROUND
+%===============================================================================
+
+\begin{frame}
+	\frametitle{Background}
+	\framesubtitle{Literature \& existing work}
+
+	\small
+	\begin{columns}[T]
+		\begin{column}{0.3\linewidth}
+			\textbf{Theory}\\
+			TODO: key concepts the audience needs.
+		\end{column}
+		\begin{column}{0.3\linewidth}
+			\textbf{Prior work}\\
+			TODO: main approaches in the literature [1, 2].
+		\end{column}
+		\begin{column}{0.3\linewidth}
+			\textbf{The gap}\\
+			TODO: what is missing that this project addresses.
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%===============================================================================
+%	04 METHODOLOGY
+%===============================================================================
+
+\begin{frame}
+	\frametitle{Methodology}
+	\framesubtitle{Approach overview}
+
+	\begin{columns}[T]
+		\begin{column}{0.38\linewidth}
+			\begin{enumerate}
+				\item TODO: step 1
+				\item TODO: step 2
+				\item TODO: step 3
+				\item TODO: validation / testing
+			\end{enumerate}
+		\end{column}
+		\begin{column}{0.58\linewidth}
+			\figplaceholder{\linewidth}{4.6cm}{TODO: system / method block diagram}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%===============================================================================
+%	05 DESIGN & IMPLEMENTATION
+%===============================================================================
+
+\begin{frame}
+	\frametitle{Design \& Implementation}
+
+	\begin{columns}[T]
+		\begin{column}{0.48\linewidth}
+			\textbf{Key design decisions}
+			\begin{itemize}
+				\item TODO: decision and why
+				\item TODO: decision and why
+			\end{itemize}
+
+			\textbf{Tools \& setup}\\
+			TODO: hardware / software / data used.
+		\end{column}
+		\begin{column}{0.48\linewidth}
+			\figplaceholder{\linewidth}{4.2cm}{TODO: photo, CAD, schematic or code architecture}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%===============================================================================
+%	06 RESULTS
+%===============================================================================
+
+\begin{frame}
+	\frametitle{Results}
+	\framesubtitle{Key findings}
+
+	\begin{columns}[T]
+		\begin{column}{0.58\linewidth}
+			\figplaceholder{\linewidth}{4.6cm}{TODO: main results plot}
+		\end{column}
+		\begin{column}{0.38\linewidth}
+			\textbf{Takeaways}
+			\begin{itemize}
+				\item TODO: headline result
+				\item TODO: comparison to baseline
+				\item TODO: surprising finding
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+	\frametitle{Results}
+	\framesubtitle{Quantitative summary}
+
+	\begin{columns}[T]
+		\begin{column}{0.48\linewidth}
+			\begin{tabular}{L{0.34\linewidth} C{0.25\linewidth} R{0.25\linewidth}}
+				\toprule
+				Case & Metric A & Metric B\\
+				\midrule
+				Baseline & TODO & TODO\\
+				Method 1 & TODO & TODO\\
+				Method 2 & TODO & TODO\\
+				\bottomrule
+			\end{tabular}
+		\end{column}
+		\begin{column}{0.48\linewidth}
+			TODO: what the table shows, in one or two sentences.
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%===============================================================================
+%	07 DISCUSSION
+%===============================================================================
+
+\begin{frame}
+	\frametitle{Discussion}
+
+	\begin{columns}[T]
+		\begin{column}{0.48\linewidth}
+			\textbf{What worked}
+			\begin{itemize}
+				\item TODO
+				\item TODO
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.48\linewidth}
+			\textbf{Limitations \& challenges}
+			\begin{itemize}
+				\item TODO
+				\item TODO
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%===============================================================================
+%	08 CONCLUSIONS & NEXT STEPS
+%===============================================================================
+
+\begin{frame}
+	\frametitle{Conclusions \& Next Steps}
+
+	\begin{columns}[T]
+		\begin{column}{0.48\linewidth}
+			\textbf{Conclusions}
+			\begin{enumerate}
+				\item TODO
+				\item TODO
+				\item TODO
+			\end{enumerate}
+		\end{column}
+		\begin{column}{0.48\linewidth}
+			\textbf{Next steps / timeline}
+			\begin{itemize}
+				\item TODO: (month) task
+				\item TODO: (month) task
+				\item TODO: (month) final report
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%===============================================================================
+%	REFERENCES
+%===============================================================================
+
+\begin{frame}
+	\frametitle{References}
+
+	\footnotesize
+	\begin{enumerate}
+		\item[{[1]}] TODO: Author, \emph{Title}, Journal, Year.
+		\item[{[2]}] TODO: Author, \emph{Title}, Journal, Year.
+	\end{enumerate}
+\end{frame}
+
+%===============================================================================
+%	CLOSING SLIDE
+%===============================================================================
+
+\begingroup
+	\setbeamercolor{background canvas}{bg=ICLBlue}
+	\setbeamercolor{normal text}{fg=white}\usebeamercolor[fg]{normal text}
+	\setbeamertemplate{closing slide logo}[logo]{ICL_Logo_White.pdf}
+	\setbeamertemplate{closing slide text}[text]{Thank you.\\ Questions?}
+	\usebeamertemplate{closing slide}
+\endgroup
+
+\end{document}
