@@ -2,22 +2,25 @@
 
 \begin{frame}
 	\frametitle{Motivation}
-	\framesubtitle{Why this problem matters}
+	\framesubtitle{Designed vs. discovered RL rules}
 
 	\begin{columns}[T]
 		\begin{column}{0.48\linewidth}
-			\textbf{The problem}\\
-			TODO: one or two sentences stating the problem in plain terms.
+			\textbf{The problem}
 
-			\textbf{Why it matters}
-			\begin{itemize}
-				\item TODO: impact / application
-				\item TODO: who benefits
-				\item TODO: what current approaches miss
-			\end{itemize}
+			Performant human-designed RL rules leverage knowledge about the dynamics of the system.
+
+			Ex. REACT is designed (from the ground up) to exploit coherent flow structures in the wake; it makes use of knowledge about the varying timescales of turbulent phenomena.
+
+			One posits that the meta-learned semantics should capture some inherent quality of this class of problem.
 		\end{column}
 		\begin{column}{0.48\linewidth}
-			\figplaceholder{\linewidth}{4.2cm}{TODO: motivating image or diagram}
+			\textbf{Why it matters}
+			\begin{itemize}
+				\item \textbf{Generalisability:} discover rules on cheaper problems, learn the semantics, apply to harder problems.
+				\item \textbf{Expressivity:} develop semantics that represent properties intangible to humans.
+				\item \textbf{Performance:} empirically, discovered RL rules outperform their counterparts.
+			\end{itemize}
 		\end{column}
 	\end{columns}
 \end{frame}
