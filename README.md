@@ -4,6 +4,7 @@ Final Year Project — Suhail Halaby (supervisor: Georgios Rigas), Imperial Coll
 
 ```
 Presentation/          Beamer slides, synced with Overleaf (compile with XeLaTeX)
+Lit_Review/            Literature review
 Implementation/
 ├── hydrogym/          HydroGym flow environments and simulations
 ├── jax_toy_problems/  Toy PDEs and ODEs written in JAX
