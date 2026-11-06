@@ -1,3 +1,4 @@
+# --- LaTeX (Presentation/) ---
 *.aux
 *.log
 *.nav
@@ -8,3 +9,39 @@
 *.fdb_latexmk
 *.xdv
 *.synctex.gz
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# --- Experiment outputs (keep folder, ignore contents) ---
+experiments/runs/*
+!experiments/runs/.gitkeep
+!experiments/runs/LOG.md
+wandb/
+tensorboard/
+
+# --- Data ---
+data/raw/*
+data/processed/*
+!data/*/.gitkeep
+
+# --- HydroGym / Firedrake ---
+environments/hydrogym/checkpoints/*
+!environments/hydrogym/checkpoints/.gitkeep
+*.h5
+*.pvd
+*.vtu
+*.pvtu
+*.ckpt
+*.pt
+
+# --- OS / editors ---
+.DS_Store
+.vscode/
+.idea/

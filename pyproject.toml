@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "afc"
+version = "0.1.0"
+description = "Reinforcement learning (incl. discovered RL rules) for active flow control of road vehicles"
+authors = [{ name = "Suhail Halaby" }]
+requires-python = ">=3.10"
+# HydroGym / Firedrake are installed separately (see README); add other dependencies here as needed.
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
