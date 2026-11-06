@@ -10,12 +10,13 @@
 			{\tiny\textcolor{ICLBlue}{Figure adapted from Oh et al.~[1]}}
 		\end{column}
 		\begin{column}{0.39\linewidth}
-			\small
+			\footnotesize
+            \vspace{-0.5cm}
 			\begin{description}[(d)]
-				\item[(a)] TODO: caption
-				\item[(b)] TODO: caption
-				\item[(c)] TODO: caption
-				\item[(d)] TODO: caption
+				\item[a. Discovery:] Many agents, in various environments, all learning in parallel with targets learned by the meta-network. 
+				\item[b. Agent:] Returns policy \textbf{$\pi(s,a)$}, observation-conditioned prediction \textbf{$y(s)$}, action-conditioned prediction \textbf{$y(s)$}, which are driven towards meta-learned targets. Also returns predictions with pre-defined semantics.
+                \item[c. Meta Network:] A trajectory of the agent’s outputs is given as input, targets are generated. A working memory of these inputs is kept through LSTM.
+				\item[d. Meta-Optimization:] Chain rule evaluation of the meta gradient, using backpropagation across the agent's update process to estimate \textbf{$\nabla_\eta \theta$}, and advantage actor-critic to estimate \textbf{$\nabla_\theta J(\theta)$}
 			\end{description}
 		\end{column}
 	\end{columns}

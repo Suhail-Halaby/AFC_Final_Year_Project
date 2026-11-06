@@ -1,0 +1,48 @@
+% Slide: flow surrogates -- key features of turbulent flows
+% These are the properties the flow surrogates (cheaper ODE/PDE systems) should share
+% with turbulence -- i.e. the things that make DNS expensive.
+
+\begin{frame}
+	\frametitle{Flow Surrogates}
+	\framesubtitle{Key features of turbulent flows to reproduce~[2,\,3]}
+
+	\small
+	\begin{columns}[T]
+		\begin{column}{0.31\linewidth}
+			\textbf{Unsteadiness}\\
+			Apparently random variation of all variables in time; averaged fields are smooth, possibly steady.
+
+			\textbf{Turbulent diffusion}\\
+			Turbulent transport brings fluid parcels from different locations into contact.
+		\end{column}
+		\begin{column}{0.31\linewidth}
+			\textbf{Dissipation}\\
+			Viscous mixing irreversibly converts kinetic energy into internal energy; without forcing, turbulence decays.
+
+			\textbf{Non-locality \& non-linearity}\\
+			Advection couples large and small scales \emph{in both directions}, cascading energy down to the Kolmogorov scale.
+		\end{column}
+		\begin{column}{0.31\linewidth}
+			\textbf{Coherent structures}\\
+			Repeatable, largely deterministic events that often drive substantial mixing.
+
+			\textbf{Broad range of scales}\\
+			Fluctuations span several orders of magnitude in both length and time.
+		\end{column}
+	\end{columns}
+
+	\vfill
+	\begingroup
+		\setlength{\fboxsep}{6pt}
+		\colorbox{ICLLightGrey}{%
+			\parbox{\dimexpr\linewidth-2\fboxsep\relax}{%
+				\textbf{Why surrogates?} 
+                
+                DNS must resolve every scale from $L$ down to the Kolmogorov scale $\eta$, so the degrees of freedom scale as $N_{\text{DoF}} \sim (L/\eta)^{3} \sim Re^{9/4}$~[3].
+
+                
+                \textbf{Find ODEs/PDEs that share these properties at a fraction of the cost.}
+			}%
+		}
+	\endgroup
+\end{frame}

@@ -1,0 +1,81 @@
+% Slide: compute estimate
+% DiscoRL figures checked against Oh et al. [1]:
+%   Methods "Implementation details": 128 / 206 agents; 1,024 TPUv3 cores x 64 h;
+%   2,048 TPUv3 cores x 60 h; batch of 96 trajectories x 29 steps; 20-update window.
+%   Fig. 3a + text: best Disco57 found within ~600M steps/game; Fig. 3a axis runs to 1,200M.
+%
+% Derived Disco57 throughput (env steps / s / TPUv3 core):
+%   57 games x (0.6--1.2)e9 steps = 3.4e10--6.8e10 steps
+%   / (64 h x 3600 s) = 1.5e5--3.0e5 steps/s total
+%   / 1,024 cores     = ~150--300 steps/s per core
+% (needs \usepackage{mathtools} in main.tex for \mathclap)
+
+\begin{frame}
+	\frametitle{Feasibility}
+	\framesubtitle{Compute estimate}
+    \vspace{-1cm}
+
+	\[
+		T_{\text{compute}} \sim
+		\frac{
+			\alpha_{\text{overhead}} \times N_{\text{meta}}
+			\times
+			\overbrace{\big(P \times K_{\text{backprop}}\big)}^{\mathclap{\substack{\text{agent updates}\\\text{per meta-update}}}}
+			\times
+			\overbrace{\big(E \times K_{\text{rollout}}\big)}^{\mathclap{\substack{\text{env steps}\\\text{per agent update}}}}
+		}{
+			\text{throughput}
+		}
+	\]
+
+	\vspace{-1mm}
+	\scriptsize
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{@{}l c c c c c c r@{}}
+		\toprule
+		Case & $N_{\text{meta}}$ & $P$ & $K_{\text{backprop}}$ & $E$ & $K_{\text{rollout}}$
+			& Throughput & TPUv3 core-h \\
+		\midrule
+		Disco57 {\tiny(Atari57)}
+			& n.r. & 128 & 20 & 96 & 29 & $\sim$150--300$^{\dagger}$
+			& 65.5k {\tiny(1{,}024 $\times$ 64\,h)} \\
+		Disco103 {\tiny(Atari + ProcGen + DMLab-30)}
+			& n.r. & 206 & 20 & 96 & 29 & n.r.
+			& 123k {\tiny(2{,}048 $\times$ 60\,h)} \\
+		\midrule
+		\textbf{This work} {\tiny(flow surrogates and simple CFD)}
+			& \multicolumn{7}{c}{\textit{to be measured}} \\
+		\bottomrule
+	\end{tabular}
+
+	\vfill
+	\begin{columns}[T]
+		\begin{column}{0.52\linewidth}
+			\footnotesize
+			\textbf{Estimation plan:}
+            \vspace{-.25cm}
+			\begin{enumerate}
+				\item \textbf{Measure Environment throughput:} Flow surrogates impemented with JAX, later HydroGym tests.
+				\item \textbf{Evaluate Overhead:} Empirically measured using time per agent update vs.\ one 20-update meta-gradient in the \texttt{disco\_rl} harness
+				\item \textbf{Extrapolate:} chosen $N_{\text{meta}}$, $P$, $E$, $K_{\text{rollout}}$
+			\end{enumerate}
+		\end{column}
+		\begin{column}{0.44\linewidth}
+			\tiny
+			\begin{tabular}{@{}l@{\quad}l@{}}
+				$N_{\text{meta}}$ & number of meta-updates \\
+				$P$ & population size (agents) \\
+				$K_{\text{backprop}}$ & agent updates unrolled per meta-gradient \\
+				$E$ & trajectories per agent update \\
+				$K_{\text{rollout}}$ & steps per trajectory \\
+				$\alpha_{\text{overhead}}$ & meta-gradient cost multiplier \\
+				throughput & env steps / s / core \\
+			\end{tabular}
+
+			\vspace{1mm}
+			$^{\dagger}$Derived: best rule found within $\sim$600M steps/game; run shown to 1{,}200M~[1, Fig.~3a].
+			57 games $\times$ (0.6--1.2)B steps over 64\,h on 1{,}024 cores.
+			n.r.: not reported in [1]. 2D CFD: evaluation only.
+		\end{column}
+	\end{columns}
+\end{frame}

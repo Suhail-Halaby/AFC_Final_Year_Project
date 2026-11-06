@@ -4,17 +4,53 @@
 	\frametitle{Methodology}
 	\framesubtitle{Approach overview}
 
+	\textbf{Goal:} meta-learned semantics that internalise properties inherent to turbulent flow phenomena.
+
+	% Rationale (kept as notes):
+	% - These properties appear in a variety of other chaotic dynamical systems, whose
+	%   governing equations are numerically cheaper to solve than the full Navier--Stokes.
+	% - DiscoRL benefits from diverse training environments, provided they are
+	%   (in some intangible way) linked.
+
+	\medskip
+	\begin{center}
+	\begin{tikzpicture}[
+		stage/.style={draw=ICLBlue, line width=0.8pt, rounded corners=3pt,
+			minimum width=3.15cm, minimum height=1.05cm, align=center, font=\small\bfseries},
+		desc/.style={text width=3.15cm, align=center, font=\scriptsize, anchor=north, execute at begin node={\hyphenpenalty=10000}},
+		num/.style={circle, fill=ICLBlue, text=white, inner sep=1.5pt, font=\scriptsize\bfseries},
+		arr/.style={->, >=stealth, line width=1pt, ICLBlue},
+	]
+		\foreach \i/\x/\name/\fill in {
+			1/0/{Chaotic\\dynamical systems}/white,
+			2/3.75/{HydroGym:\\simple flow}/white,
+			3/7.5/{HydroGym:\\varied BCs}/white,
+			4/11.25/{Wind tunnel}/ICLCream}
+		{
+			\node[stage, fill=\fill] (s\i) at (\x,0) {\name};
+			\node[num] at (s\i.north west) {\i};
+		}
+		\foreach \a/\b in {1/2, 2/3, 3/4} \draw[arr] (s\a) -- (s\b);
+
+		\node[desc] at ([yshift=-4pt]s1.south) {Identify systems with bearings on the problem; discover the rule};
+		\node[desc] at ([yshift=-4pt]s2.south) {Validate the discovered rule on a simple fluid flow};
+		\node[desc] at ([yshift=-4pt]s3.south) {Hugely varied boundary conditions to develop deep fluid-flow intuition};
+		\node[desc] at ([yshift=-4pt]s4.south) {On-policy learning in the real flow; benchmark against REACT};
+
+		% Cost / fidelity axis
+		\draw[->, >=stealth, line width=0.6pt, gray] (-1.5,-2.35) -- (12.75,-2.35)
+			node[midway, below, font=\scriptsize, text=gray] {increasing cost \& physical fidelity};
+	\end{tikzpicture}
+	\end{center}
+
+	\vfill
+	\footnotesize
 	\begin{columns}[T]
-		\begin{column}{0.38\linewidth}
-			\begin{enumerate}
-				\item TODO: step 1
-				\item TODO: step 2
-				\item TODO: step 3
-				\item TODO: validation / testing
-			\end{enumerate}
+		\begin{column}{0.48\linewidth}
+			\textbf{Why proxy systems?} Turbulence-like properties also appear in cheaper chaotic systems that avoid solving full Navier--Stokes.
 		\end{column}
-		\begin{column}{0.58\linewidth}
-			\figplaceholder{\linewidth}{4.6cm}{TODO: system / method block diagram}
+		\begin{column}{0.48\linewidth}
+			\textbf{Why diversity?} DiscoRL benefits from diverse training environments, provided they are linked by some (maybe intangible) properties.
 		\end{column}
 	\end{columns}
 \end{frame}
