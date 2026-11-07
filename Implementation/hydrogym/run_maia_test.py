@@ -11,7 +11,7 @@ mpirun alongside it. Use run_maia_test.sh, which does this for you:
 
 Under the hood (from inside the prepared workspace folder):
 
-    mpirun -np 1 python run_maia_test.py --env Cylinder_2D_Re200 : -np 1 maia properties.toml
+    mpirun -np 1 python run_maia_test.py --env Cylinder_2D_Re200 : -np 1 maia properties_run.toml --silent
 """
 
 import argparse
@@ -29,8 +29,20 @@ def main():
     parser.add_argument("--out", default="rewards.csv", help="CSV file for step rewards")
     args = parser.parse_args()
 
+    # Velocity probes in the wake: 8 points downstream x 5 across (x, y pairs, flattened).
+    # The environment requires probe locations; this grid matches HydroGym's examples.
+    probe_locations = []
+    for x in np.linspace(1.0, 8.0, 8):
+        for y in np.linspace(-1.0, 1.0, 5):
+            probe_locations.extend([float(x), float(y)])
+
     # Create the environment (uses the workspace in the current folder / HF cache)
-    env = maia.from_hf(args.env, use_clean_cache=False)
+    env = maia.from_hf(
+        args.env,
+        use_clean_cache=False,
+        probe_locations=probe_locations,
+        obs_normalization_strategy="U_inf",
+    )
     print(f"Environment:       {args.env}")
     print(f"Observation space: {env.observation_space}")
     print(f"Action space:      {env.action_space}")
