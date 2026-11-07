@@ -22,3 +22,7 @@ __pycache__/
 *.ckpt
 
 .DS_Store
+
+# Simulation run folders
+runs/
+Implementation/**/runs/
