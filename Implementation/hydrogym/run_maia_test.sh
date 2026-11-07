@@ -21,5 +21,5 @@ python "${PREP}" --env "${ENV}" --work-dir "${WORK}"
 
 # 2. Run 1 Python process + 1 MAIA process, coupled over MPI
 cd "${WORK}"
-mpirun -np 1 python "${HERE}/MAIA_install_test.py" --env "${ENV}" --steps "${STEPS}" \
+mpirun -np 1 python "${HERE}/run_maia_test.py" --env "${ENV}" --steps "${STEPS}" \
      : -np 1 maia properties.toml
