@@ -71,7 +71,7 @@ The prompt now looks like `[easybuild@<id> workspace]$`. Run once:
 ```bash
 cat >> ~/.bashrc << 'EOF'
 module unload nvhpc 2>/dev/null
-module load MAIA
+module load MAIA/1.0-gompi-2024a-SystemCUDA-CPU
 source ~/venvs/hydrogym_gpu/bin/activate
 EOF
 source ~/.bashrc
@@ -79,6 +79,7 @@ source ~/.bashrc
 
 Why:
 - MAIA is provided as an Lmod **module**, not on the PATH. A pre-loaded `nvhpc` module clashes with it, so it is unloaded first.
+- The **CPU build** of MAIA is loaded on the laptop because the default GPU build crashes on this CPU (see §5.1). On the HPC use `module load MAIA` (the GPU build) instead.
 - Python lives in a venv. There are two: `hydrogym_gpu` (use this) and `hydrogym_cpu`.
 
 ### 2.6 Check everything works
@@ -86,7 +87,7 @@ Why:
 ```bash
 ls /workspace                     # repo files
 nvidia-smi                        # RTX 4050 visible
-which maia                        # ~/eb_software/software/MAIA/1.0-NVHPC-26.1/bin/maia
+which maia                        # path to the loaded MAIA build
 python -c "import hydrogym, jax; print(hydrogym.__file__); print(jax.devices())"
 pip list | grep -i -E "hydrogym|jax|torch|stable"
 ```
@@ -144,14 +145,30 @@ Firedrake is not in `hydrogym_gpu`; it is likely in `~/firedrake` or `hydrogym_c
 
 MAIA runs as a separate solver process coupled to Python over MPI (MPMD), so the script cannot be run with plain `python` or the Run button. Two steps:
 
-1. Prepare a workspace (downloads the case from Hugging Face, creates `properties.toml`).
+1. Prepare a workspace (downloads the case from Hugging Face, creates `properties_run.toml`).
 2. Launch Python and MAIA together from inside that workspace.
 
 ```bash
 python ~/hydrogym/examples/maia/getting_started/prepare_workspace.py --env Cylinder_2D_Re200 --work-dir ./runs/Cylinder_2D_Re200
 cd runs/Cylinder_2D_Re200
-mpirun -np 1 python /workspace/path/to/my_script.py : -np 1 maia properties.toml
+export OMP_NUM_THREADS=1
+mpirun --bind-to none --mca coll_hcoll_enable 0 \
+  -np 1 python /workspace/path/to/my_script.py \
+  : -np 1 maia properties_run.toml --silent
 ```
+
+- The run file is **`properties_run.toml`**. Older docs say `properties.toml`, which this version does not create.
+- `--bind-to none --mca coll_hcoll_enable 0` silences harmless laptop warnings about memory binding and missing InfiniBand.
+- In this HydroGym version, `maia.from_hf(...)` **must be given `probe_locations`**, otherwise it fails with `object of type 'NoneType' has no len()`. A standard wake grid:
+  ```python
+  probe_locations = []
+  for x in np.linspace(1.0, 8.0, 8):
+      for y in np.linspace(-1.0, 1.0, 5):
+          probe_locations.extend([float(x), float(y)])
+  env = maia.from_hf("Cylinder_2D_Re200", use_clean_cache=False,
+                     probe_locations=probe_locations, obs_normalization_strategy="U_inf")
+  ```
+  For the cylinder this gives an 80-value observation (u, v at 40 probes) and a 1-value action in [-1, 1].
 
 `Implementation/hydrogym/run_maia_test.sh` does all of this for the smoke test:
 
@@ -162,6 +179,31 @@ cd /workspace/Implementation/hydrogym
 ```
 
 It runs `MAIA_install_test.py`, prints the reward each step and writes `rewards.csv` into `runs/<env>/`.
+
+Expected output with zero actuation: a reward oscillating between about −1.32 and −1.52 with a period of ~7 steps. That is the natural vortex shedding (Kármán street) of the uncontrolled cylinder.
+
+### 5.1 MAIA builds: use the CPU build on the laptop
+
+The image has two MAIA builds (`module avail MAIA`):
+
+| Module | Runs on | Laptop (i7-13700H) |
+|---|---|---|
+| `MAIA/1.0-NVHPC-26.1` (default) | GPU | **Crashes** with `exited on signal 4 (Illegal instruction)` right after `Warming up Device` |
+| `MAIA/1.0-gompi-2024a-SystemCUDA-CPU` | CPU | **Works** |
+
+Cause: the GPU build's CPU-side code was compiled with instructions this laptop's processor lacks. The i7-13700H has AVX2 but no AVX-512 (check with `grep -o -w 'avx512[a-z]*' /proc/cpuinfo`, which prints nothing). The GPU itself is fine.
+
+So:
+- **Laptop:** use the CPU build (the default in `.bashrc` and `run_maia_test.sh`). 2D cases are fast enough for development and short training runs. JAX still uses the GPU.
+- **HPC:** server CPUs should run the GPU build: `module load MAIA`, or `MAIA_MODULE=MAIA ./run_maia_test.sh`.
+- **GPU MAIA on the laptop** would need a MAIA built for generic x86 CPUs (e.g. NVHPC `-tp=haswell`), or MAIA rebuilt inside the container (`~/eb-build.sh`, `~/easyconfigs/`). Worth reporting to the HydroGym team.
+
+Switching builds in a shell:
+```bash
+module unload MAIA
+module load MAIA/1.0-gompi-2024a-SystemCUDA-CPU
+which maia
+```
 
 Reference examples inside the container: `~/hydrogym/examples/maia/getting_started/` (`test_maia_env.py`, `train_sb3_maia.py`). Environment names: `existing_environments.yaml` in the HydroGym repo.
 
@@ -200,7 +242,7 @@ apptainer pull docker://clagemann/hydrogym-nvhpc-26.1_cuda-12.9_turing_ampere:la
 apptainer run --nv --bind $(pwd):/workspace hydrogym-nvhpc-26.1_cuda-12.9_turing_ampere_latest.sif
 ```
 
-Pick the image matching the cluster's GPUs (`hopper_blackwell` for H100). Compute nodes often have no internet, so run `prepare_workspace.py` on a login node first.
+Pick the image matching the cluster's GPUs (`hopper_blackwell` for H100). Use the GPU MAIA build there (`module load MAIA`). Compute nodes often have no internet, so run `prepare_workspace.py` on a login node first.
 
 ---
 
@@ -216,6 +258,12 @@ Pick the image matching the cluster's GPUs (`hopper_blackwell` for H100). Comput
 | `ModuleNotFoundError: No module named 'numpy'` from VS Code | VS Code is using Windows Python; attach to the container (section 4). |
 | `bad interpreter: /bin/bash^M` | Windows line endings: `sed -i 's/\r$//' script.sh`. `.gitattributes` keeps `.sh` files LF from now on. |
 | mpirun: "not enough slots" | Add `--oversubscribe` after `mpirun`. |
+| `exited on signal 4 (Illegal instruction)` after `Warming up Device` | The GPU MAIA build is incompatible with this CPU; load the CPU build (§5.1). |
+| `ConfigError ... object of type 'NoneType' has no len()` | Pass `probe_locations` to `maia.from_hf` (§5). |
+| `property file 'properties.toml' not readable` | Use `properties_run.toml`. |
+| `failed to bind memory`, `Unable to get list of available IB devices`, `Hcol library init failed` | Harmless on a laptop; `--bind-to none --mca coll_hcoll_enable 0` hides most of them. |
+| `fatal: detected dubious ownership in repository at '/workspace'` | Run git on Windows instead, or `git config --global --add safe.directory /workspace`. |
+| `git commit` opens an unfamiliar editor (Vim) | Press `i`, type the message, `Esc`, `:wq`, Enter. Avoid it with `git commit -m "message"`. |
 | `jax.devices()` shows only `CpuDevice` | Container created without `--gpus all`, or the Windows NVIDIA driver is outdated. |
 | Image pull seems stuck | Extraction of big layers can look frozen at 100 %. If nothing changes for 15+ min: Ctrl+C, restart Docker Desktop, pull again. |
 
