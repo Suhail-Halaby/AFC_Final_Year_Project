@@ -14,7 +14,7 @@ Implementation/
 
 ## Setup
 
-See [SETUP.md](SETUP.md) for installing HydroGym (MAIA, JAX, Firedrake) in Docker on Windows, attaching VS Code, and running the solvers from this repo.
+See [Implementation/hydrogym/SETUP.md](Implementation/hydrogym/SETUP.md) for installing HydroGym (MAIA, JAX, Firedrake) in Docker on Windows, attaching VS Code, and running the solvers from this repo.
 
 Quick MAIA smoke test, inside the container:
 
