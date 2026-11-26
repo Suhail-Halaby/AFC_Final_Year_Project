@@ -26,3 +26,7 @@ __pycache__/
 # Simulation run folders
 runs/
 Implementation/**/runs/
+
+.venv/
+__pycache__/
+.ipynb_checkpoints/
